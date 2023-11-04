@@ -57,14 +57,8 @@ public class ToDoItemModelTest
         // Arrange
         var repository = new Mock<IRepository<ToDoItem>>();
         var model = new ToDoItemModel(repository.Object);
-        var item = new ToDoItem
-        {
-            Id = 1,
-            Title = "Test",
-            ToDoListId = 1
-        };
 
-        repository.Setup(r => r.GetByIdAsync(item.Id))
+        repository.Setup(r => r.GetByIdAsync(1))
         .ReturnsAsync(new ToDoItem
         {
             Id = 1,
@@ -73,7 +67,7 @@ public class ToDoItemModelTest
         });
 
         // Act
-        await model.Delete(item);
+        var item = await model.Delete(1);
 
         // Assert
         repository.Verify(r => r.DeleteAsync(item), Times.Once);

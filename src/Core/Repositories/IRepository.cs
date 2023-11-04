@@ -8,7 +8,7 @@ namespace DoIt.Core.Repositories;
 
 public interface IRepository<T> where T : IEntity
 {
-    Task<T> GetByIdAsync(int id);
+    Task<T?> GetByIdAsync(int id);
 
     Task AddAsync(T entity);
 

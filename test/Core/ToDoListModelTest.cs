@@ -70,9 +70,7 @@ public class ToDoListModelTest
                 Description = "Testing"
             });
 
-        var list = await model.GetById(1);
-
-        await model.Delete(list);
+        var list = await model.Delete(1);
 
         repository.Verify(r => r.DeleteAsync(list), Times.Once);
     }

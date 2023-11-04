@@ -18,7 +18,7 @@ public abstract class CRUDModel<TEntity, TRepository>
         Repository = repository;
     }
 
-    public async Task<TEntity> GetById(int id)
+    public async Task<TEntity?> GetById(int id)
     {
         return await Repository.GetByIdAsync(id);
     }
@@ -42,7 +42,12 @@ public abstract class CRUDModel<TEntity, TRepository>
             throw new ArgumentException("Id must not be default");
         }
 
-        TEntity currentEntity = await GetById(entity.Id);
+        TEntity? currentEntity = await GetById(entity.Id);
+
+        if (currentEntity == null)
+        {
+            throw new ArgumentException("Entity not found");
+        }
 
         await Compare(currentEntity, entity);
 
@@ -51,18 +56,27 @@ public abstract class CRUDModel<TEntity, TRepository>
         await Repository.UpdateAsync(entity);
     }
 
-    public async Task Delete(TEntity entity)
+    public async Task<TEntity> Delete(int id)
     {
-        if (entity.Id == default)
+        if (id == default)
         {
             throw new ArgumentException("Id must not be default");
         }
 
-        await Deleting(entity);
+        TEntity? currentEntity = await GetById(id);
 
-        await Repository.DeleteAsync(entity);
+        if (currentEntity == null)
+        {
+            throw new ArgumentException("Entity not found");
+        }
 
-        await Deleted(entity);
+        await Deleting(currentEntity);
+
+        await Repository.DeleteAsync(currentEntity);
+
+        await Deleted(currentEntity);
+
+        return currentEntity;
     }
 
 /// <summary>
