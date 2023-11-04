@@ -24,5 +24,9 @@ public static class AggregateRootConfiguration
         builder.Property(r => r.UpdatedBy)
             .HasMaxLength(100)
             .IsRequired();
+
+        builder.Property(r => r.RowVersion)
+            .IsConcurrencyToken()
+            .IsRequired();
     }
 }
